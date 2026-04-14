@@ -1,5 +1,5 @@
 import math
-
+import numpy as np
 class Nodo():
     """Objeto responsable de almacenar la informacion de las coordenadas y los punteros hacia los demás nodos"""
     def __init__(self, coordenadas):
@@ -16,11 +16,40 @@ class KD_Tree():
         self.datos = datos
 
     def mediana_coordenada(self, lista, eje='x'):
-        """"En base a una lista y un eje retorna la mediana de los datos según el eje que esté en el argumento y la lista de datos organizada"""
+            
+        """
+        Calcula la mediana estadística real del eje y 
+        separa los datos basándose en ese VALOR.
+        """
+        if not lista:
+            return None, []
+
         idx = 0 if eje == 'x' else 1
+        
+        # 1. Extraer solo los valores del eje para calcular la mediana real
+        valores_eje = [p[idx] for p in lista]
+        
+        # 2. CALCULAR LA MEDIANA REAL (Estadística)
+        # Esto devuelve un número, no un punto.
+        valor_mediana = np.median(valores_eje)
+        
+        # 3. Ordenar la lista (esto lo conservamos para el output que pediste)
         ordenada = sorted(lista, key=lambda p: p[idx])
-        n = len(ordenada)
-        return ordenada[n // 2], ordenada
+        
+        # 4. BUSCAR EL PUNTO REAL MÁS CERCANO A ESA MEDIANA
+        # En un KD-Tree, necesitamos un punto de la lista para que sea el Nodo.
+        # Buscamos el primer punto cuyo valor sea >= a la mediana real.
+        punto_pivote = None
+        for p in ordenada:
+            if p[idx] >= valor_mediana:
+                punto_pivote = p
+                break
+                
+        # Si por alguna razón no lo encuentra (duplicados), tomamos el último
+        if punto_pivote is None:
+            punto_pivote = ordenada[len(ordenada)//2]
+
+        return punto_pivote, ordenada
 
     def construir_arbol(self, datos=None, node=None, eje='x'):
         """Se encarga de construir el árbol recursivamente """
