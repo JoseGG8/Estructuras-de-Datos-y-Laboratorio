@@ -3,6 +3,7 @@ import numpy as np
 
 def graficar_busqueda_radio(arbol, punto_objetivo, radio):
     """
+    Visualiza todos los puntos que estan dentro de un radio definido tomado a partir del punto objetivo
     Args:
         arbol: instancia de KD_Tree ya construida.
         punto_objetivo (tuple): Tupla (x, y).
