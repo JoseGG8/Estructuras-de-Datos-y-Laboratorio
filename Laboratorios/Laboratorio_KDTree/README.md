@@ -1,16 +1,46 @@
-Este laboratorio tiene la siguiente estructura: 
-análisis.ipynb
-funciones_graficas.py
-KD_Tree.py
-test.ipynb
+# Laboratorio: Estructuras de Datos Espaciales - K-D Tree
 
-Explicación componentes:
-KD_Tree.py es el archivo donde se construyó el arbol KD, sus métodos y la clase nodo
-el arbol kd fue construido para 2 dimensiones y sus metodos responden a esto, este arbol almacena nodos con las coordenadas de los datos que se le pasen. Como utilizar? esta clase se importa en los otros archivos para implementar instancias de arboles kd y desarrollar el laboratorio.
+Este proyecto implementa y analiza el rendimiento de un **Árbol K-Dimensional (K-D Tree)** en 2 dimensiones, comparando su eficiencia contra algoritmos de **Fuerza Bruta** en tareas de búsqueda espacial.
 
-funciones_graficas.py contiene las funciones para crear las graficas con matplotlib, este archivo se creó con el ánimo de mantener una estructura más limpia en el proyecto. Como utilizar? estas funciones se implementan en test.py para visualización directa de las gráficas de busqueda de vecino más cercano y búsqueda por radio.
-estas funciones implementan los metodos de KD_Tree.py para buscar.
+## 📂 Estructura del Proyecto
 
-test.ipynb contiene las gráficas que se crean con las funciones de funciones_graficas.py. Para utilizar este archivo debes ejecutar todas las celdas en orden y se podrán visualizar las gráficas.
+El laboratorio se divide en los siguientes componentes:
 
-analisis.ipynb es un notebook que contiene los algoritmos de busqueda por fuerza bruta, posterior a eso hay dos celdas que comparan los tiempos de ejecucion de busqueda de vecinos cercanos y de busqueda por radio implementando busqueda con arbol kd y busqueda con fuerza bruta. abajo de cada celda de comparacion se encuentran las conclusiones de cada experimento basado en los resultados obtenidos. Para usar este archivo se deben ejecutar todas las celdas en orden, si se quieren verificar tiempos diferentes se deben cambiar la cantidad de los datos en la primera celda y los parámetros de las funciones. NOTA: para la comparación de tiempos se usa un promedio de tiempos de ejecucion.
+* **`KD_Tree.py`**: El núcleo del proyecto. Contiene la definición de la clase `Nodo` y la clase `KD_Tree`. Está optimizado para 2 dimensiones y permite la construcción del árbol y la ejecución de métodos de búsqueda.
+* **`funciones_graficas.py`**: Módulo auxiliar que contiene funciones basadas en `matplotlib`. Su objetivo es desacoplar la lógica de visualización del procesamiento de datos para mantener un código limpio.
+* **`test.ipynb`**: Notebook destinado a la validación visual. Aquí se invocan las funciones de graficación para observar el comportamiento de la **Búsqueda por Vecino más Cercano (KNN)** y la **Búsqueda por Radio**.
+* **`analisis.ipynb`**: Notebook de experimentación técnica. Contiene la implementación de Fuerza Bruta y las celdas de comparación de tiempos (benchmarking) entre ambas estrategias, incluyendo las conclusiones derivadas de los resultados.
+
+---
+
+## 🚀 Guía de Uso
+
+### Visualización de Algoritmos
+Para ver el árbol en acción y cómo delimita el espacio:
+1. Abre `test.ipynb`.
+2. Ejecuta las celdas en orden cronológico.
+3. Se generarán gráficos interactivos/estáticos de las búsquedas realizadas.
+
+### Análisis de Rendimiento (Benchmark)
+Para comparar la eficiencia del K-D Tree frente a la Fuerza Bruta:
+1. Abre `analisis.ipynb`.
+2. Ejecuta todas las celdas para observar las métricas basadas en el **promedio de tiempos de ejecución**.
+3. **Personalización:** Si deseas probar diferentes escenarios, modifica la cantidad de datos en la primera celda o ajusta los parámetros de los métodos de búsqueda (como el radio).
+
+---
+
+## 🛠️ Detalles de Implementación
+
+> [!IMPORTANT]
+> El K-D Tree almacena nodos con coordenadas bidimensionales. Para las comparaciones de tiempo, se utiliza un promedio de múltiples ejecuciones para mitigar variaciones térmicas o de procesamiento del sistema.
+
+### Componentes principales:
+* **Construcción:** El árbol se genera a partir de un conjunto de puntos dado.
+* **Búsqueda por Radio:** Implementa poda (pruning) para evitar recorrer ramas que no intersectan el área de búsqueda.
+* **Fuerza Bruta:** Implementada en listas para servir como línea base (baseline) de comparación.
+
+---
+
+## 📝 Notas
+* Asegúrate de tener instaladas las dependencias de `matplotlib` y `numpy` (si aplica).
+* El archivo `KD_Tree.py` debe estar en el mismo directorio que los notebooks para que las importaciones funcionen correctamente.
