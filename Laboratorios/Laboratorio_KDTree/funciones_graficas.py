@@ -111,3 +111,35 @@ def graficar_vecino_cercano(arbol, punto_objetivo):
     
     plt.tight_layout()
     plt.show()
+
+
+def graficar_comparativa(resultados):
+    """
+    Recibe el diccionario de la función anterior y genera las gráficas.
+    """
+    n = resultados['n']
+    
+    plt.figure(figsize=(14, 6))
+
+    # Gráfica 1: Vecino Cercano
+    plt.subplot(1, 2, 1)
+    plt.plot(n, resultados['nn_fb'], 'o--', label='Fuerza Bruta', color='#e74c3c', linewidth=2)
+    plt.plot(n, resultados['nn_kd'], 's-', label='KD-Tree', color='#3498db', linewidth=2)
+    plt.title('Rendimiento: Vecino Más Cercano', fontsize=14)
+    plt.xlabel('Cantidad de Puntos (N)')
+    plt.ylabel('Tiempo (segundos)')
+    plt.legend()
+    plt.grid(True, alpha=0.3)
+
+    # Gráfica 2: Búsqueda por Radio
+    plt.subplot(1, 2, 2)
+    plt.plot(n, resultados['radio_fb'], 'o--', label='Fuerza Bruta', color='#f39c12', linewidth=2)
+    plt.plot(n, resultados['radio_kd'], 's-', label='KD-Tree', color='#2ecc71', linewidth=2)
+    plt.title('Rendimiento: Búsqueda por Radio', fontsize=14)
+    plt.xlabel('Cantidad de Puntos (N)')
+    plt.ylabel('Tiempo (segundos)')
+    plt.legend()
+    plt.grid(True, alpha=0.3)
+
+    plt.tight_layout()
+    plt.show()
