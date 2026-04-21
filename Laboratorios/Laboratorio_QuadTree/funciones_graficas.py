@@ -1,6 +1,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 from QuadTree import *
+import time
 
 def graficar_busqueda_radio(arbol, punto_objetivo, radio):
     """
@@ -144,4 +145,41 @@ def graficar_comparativa(resultados):
     plt.grid(True, alpha=0.3)
 
     plt.tight_layout()
+    plt.show()
+
+def graficar_rendimiento_por_radio(arbol, punto_Q, radios_lista):
+    """
+    Mide y grafica cómo varía el tiempo de búsqueda según el tamaño del radio.
+    
+    Args:
+        arbol: El QuadTree ya construido.
+        punto_Q: Punto central para las búsquedas.
+        radios_lista: Lista de radios a probar (ej. [1, 5, 10, 20, 50, 100...])
+    """
+    tiempos = []
+    cantidades_puntos = []
+
+    for r in radios_lista:
+        # Medimos el tiempo de la búsqueda por radio
+        inicio = time.time()
+        puntos, _ = arbol.buscar_por_radio(punto_Q, r)
+        fin = time.time()
+        
+        tiempos.append(fin - inicio)
+        cantidades_puntos.append(len(puntos))
+
+    # Crear la gráfica
+    fig, ax1 = plt.subplots(figsize=(10, 6))
+
+    # Eje principal: Tiempos
+    color_tiempo = '#2ecc71'
+    ax1.set_xlabel('Radio de Búsqueda')
+    ax1.set_ylabel('Tiempo de ejecución (segundos)', color=color_tiempo)
+    ax1.plot(radios_lista, tiempos, marker='s', linestyle='-', color=color_tiempo, linewidth=2, label='Tiempo QuadTree')
+    ax1.tick_params(axis='y', labelcolor=color_tiempo)
+    ax1.grid(True, alpha=0.3)
+
+
+    plt.title(f'Rendimiento de Búsqueda por Radio\n(Punto Central: {punto_Q})', fontsize=14)
+    fig.tight_layout()
     plt.show()

@@ -6,8 +6,11 @@ class Nodo_Hoja():
         self.padre = None
 
 class Nodo_intermedio():
-    def __init__(self, datos, num_hijos):
+    def __init__(self, datos, centro, mins, maxs, num_hijos):
         self.datos = datos
+        self.centro = centro ##centro del cuadrante
+        self.mins = mins  ##limite superior
+        self.maxs = maxs  ##limite inferior
         self.padre = None
         self.hijos = [None] * num_hijos
 
@@ -57,7 +60,11 @@ class QuadTree():
 
         # 1. Manejo de la Raíz
         if nodo is None:
-            self.root = Nodo_intermedio(self.datos, num_hijos)
+            mins = [min(self.datos, key=lambda c: c[i])[i] for i in range(self.dimensiones)]
+            maxs = [max(self.datos, key=lambda c: c[i])[i] for i in range(self.dimensiones)]
+            centro = self.mitad_datos(self.datos)
+
+            self.root = Nodo_intermedio(self.datos,centro, mins, maxs, num_hijos)
             nodo_actual = self.root
         else:
             nodo_actual = nodo
@@ -76,7 +83,11 @@ class QuadTree():
                     nodo_actual.hijos[i] = nuevo_nodo
                     continue
                 # Nodo intermedio: Crear y seguir construyendo
-                nuevo_nodo = Nodo_intermedio(datos_hijo, num_hijos)
+                hijo_mins = [min(datos_hijo, key=lambda c: c[j])[j] for j in range(self.dimensiones)]
+                hijo_maxs = [max(datos_hijo, key=lambda c: c[j])[j] for j in range(self.dimensiones)]
+                hijo_centro = self.mitad_datos(datos_hijo)
+
+                nuevo_nodo = Nodo_intermedio(datos_hijo,hijo_centro,hijo_mins,hijo_maxs, num_hijos)
                 nuevo_nodo.padre = nodo_actual
                 nodo_actual.hijos[i] = nuevo_nodo
                 self.construir_arbol(nuevo_nodo)
@@ -103,7 +114,7 @@ class QuadTree():
 
     def _nns_recursivo(self, nodo, punto_Q):
         """Se encarga de bajar hasta un nodo hoja guiandose por el centro del cuadrante actual, cuando encuentra una hoja deja un mejor candidato.
-        Después de bajar se hace un"""
+        Después de bajar se hace una poda"""
         if nodo is None:
             return
 
@@ -116,12 +127,11 @@ class QuadTree():
             return
 
         # CASO NODO INTERMEDIO
-        centro = self.mitad_datos(nodo.datos)
 
         # 1. Bajada inicial (determinar el hijo más probable)
         indice_prometedor = 0
         for i in range(self.dimensiones):
-            if punto_Q[i] >= centro[i]:
+            if punto_Q[i] >= nodo.centro[i]:
                 indice_prometedor |= (1 << i)
 
         # 2. Explorar primero el hijo donde "cae" Q
@@ -142,20 +152,17 @@ class QuadTree():
         # Obtenemos los datos que viven en ese hijo
         datos_hijo = []
         if isinstance(nodo_hijo, Nodo_Hoja):
-            datos_hijo = [nodo_hijo.coordenada]
-        else:
-            datos_hijo = nodo_hijo.datos
+            dist_hoja = self.calcular_distancia(punto_Q, nodo_hijo.coordenada)
+            return dist_hoja < self.mejor_distancia
 
-        # Calculamos límites (AABB) al vuelo
+        # Calculamos límites 
         dist_cuadrada = 0
         for i in range(self.dimensiones):
-            min_eje = min(datos_hijo, key=lambda c: c[i])[i]
-            max_eje = max(datos_hijo, key=lambda c: c[i])[i]
 
-            if punto_Q[i] < min_eje:
-                dist_cuadrada += (min_eje - punto_Q[i]) ** 2
-            elif punto_Q[i] > max_eje:
-                dist_cuadrada += (punto_Q[i] - max_eje - punto_Q[i]) ** 2
+            if punto_Q[i] < nodo_hijo.mins[i]:
+                dist_cuadrada += (nodo_hijo.mins[i] - punto_Q[i]) ** 2
+            elif punto_Q[i] > nodo_hijo.maxs[i]:
+                dist_cuadrada += (punto_Q[i] - nodo_hijo.maxs[i]) ** 2
 
         return math.sqrt(dist_cuadrada) < self.mejor_distancia
 
@@ -208,14 +215,11 @@ class QuadTree():
         
         for i in range(self.dimensiones):
             # Encontramos los límites de este nodo en el eje actual
-            min_val = min(datos_nodo, key=lambda c: c[i])[i]
-            max_val = max(datos_nodo, key=lambda c: c[i])[i]
-
             # Calculamos la distancia al borde de la caja en cada eje
-            if punto_Q[i] < min_val:
-                dist_cuadrada += (min_val - punto_Q[i]) ** 2
-            elif punto_Q[i] > max_val:
-                dist_cuadrada += (punto_Q[i] - max_val) ** 2
+            if punto_Q[i] < nodo.mins[i]:
+                dist_cuadrada += (nodo.mins[i] - punto_Q[i]) ** 2
+            elif punto_Q[i] > nodo.maxs[i]:
+                dist_cuadrada += (punto_Q[i] - nodo.maxs[i]) ** 2
 
         # Retornamos True si el radio alcanza a tocar la caja
         return math.sqrt(dist_cuadrada) <= self.radio_busqueda
