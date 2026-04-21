@@ -139,11 +139,21 @@ class QuadTree():
         return math.sqrt(sum((a - b)**2 for a, b in zip(p1, p2)))
 
     def buscar_por_radio(self, punto_Q, radio):
-        self.puntos_encontrados = []
+        # Usamos una lista temporal para guardar (punto, distancia)
+        self._resultados_temporales = []
         self.radio_busqueda = radio
+        
         # Iniciamos la recursión desde la raíz
         self._radio_recursivo(self.root, punto_Q)
-        return self.puntos_encontrados
+        
+        # 1. Ordenamos por distancia (el segundo elemento de la tupla)
+        self._resultados_temporales.sort(key=lambda x: x[1])
+        
+        # 2. Extraemos solo las coordenadas para las listas finales
+        todos_los_puntos = [res[0] for res in self._resultados_temporales]
+        los_5_mas_cercanos = todos_los_puntos[:5]
+        
+        return todos_los_puntos, los_5_mas_cercanos
 
     def _radio_recursivo(self, nodo, punto_Q):
         if nodo is None:
@@ -153,12 +163,12 @@ class QuadTree():
         if isinstance(nodo, Nodo_Hoja):
             dist = self.calcular_distancia(punto_Q, nodo.coordenada)
             if dist <= self.radio_busqueda:
-                self.puntos_encontrados.append(nodo.coordenada)
+                # Guardamos la tupla (coordenada, distancia) para no recalcular luego
+                self._resultados_temporales.append((nodo.coordenada, dist))
             return
 
         # CASO NODO INTERMEDIO
         # 1. Verificamos si vale la pena revisar este nodo y sus hijos
-        # Comprobamos la distancia entre Q y la "caja" de este nodo
         if self._caja_dentro_de_radio(punto_Q, nodo):
             # Si hay intersección, revisamos a todos sus hijos
             for hijo in nodo.hijos:
@@ -169,11 +179,11 @@ class QuadTree():
         Calcula la distancia mínima desde el punto Q hasta la caja (AABB)
         formada por los datos del nodo.
         """
-        # Obtenemos los límites de los datos en este nodo
         datos_nodo = nodo.datos
-
         dist_cuadrada = 0
+        
         for i in range(self.dimensiones):
+            # Encontramos los límites de este nodo en el eje actual
             min_val = min(datos_nodo, key=lambda c: c[i])[i]
             max_val = max(datos_nodo, key=lambda c: c[i])[i]
 
@@ -183,7 +193,7 @@ class QuadTree():
             elif punto_Q[i] > max_val:
                 dist_cuadrada += (punto_Q[i] - max_val) ** 2
 
-        # Si la distancia mínima a la caja es menor o igual al radio, hay intersección
+        # Retornamos True si el radio alcanza a tocar la caja
         return math.sqrt(dist_cuadrada) <= self.radio_busqueda
 
 
