@@ -14,7 +14,7 @@
 4. [Tecnologías Utilizadas](#-tecnologías-utilizadas)
 5. [Instalación y Requisitos](#-instalación-y-requisitos)
 6. [Uso — Guía Paso a Paso](#-uso--guía-paso-a-paso)
-7. [API de la Clase QuadTree](#-api-de-la-clase-quadtree)
+7. [Clase QuadTree](#-api-de-la-clase-quadtree)
 8. [Funciones Gráficas](#-funciones-gráficas)
 9. [Análisis de Rendimiento](#-análisis-de-rendimiento)
 10. [Conclusiones](#-conclusiones)
