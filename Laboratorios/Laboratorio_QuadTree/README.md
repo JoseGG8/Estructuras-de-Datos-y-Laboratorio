@@ -1,4 +1,4 @@
-# 🌳 Laboratorio: QuadTree — Búsqueda Espacial Eficiente
+# Laboratorio: QuadTree — Búsqueda Espacial Eficiente
 
 > **Curso:** Estructuras de Datos y Laboratorio  
 > **Lenguaje:** Python 3.12  
@@ -6,7 +6,7 @@
 
 ---
 
-## 📋 Tabla de Contenidos
+## Tabla de Contenidos
 
 1. [¿Qué es un QuadTree?](#-qué-es-un-quadtree)
 2. [Descripción del Laboratorio](#-descripción-del-laboratorio)
@@ -21,16 +21,13 @@
 
 ---
 
-## 🌐 ¿Qué es un QuadTree?
+## ¿Qué es un QuadTree?
 
 Un **QuadTree** es una estructura de datos jerárquica en forma de árbol en la que cada nodo interno tiene exactamente **2^dimensiones** hijos. Se utiliza para **particionar recursivamente un espacio n-dimensional** con el objetivo de organizar datos espaciales (coordenadas) de forma eficiente.
 
-
-
-
 ---
 
-## 📌 Descripción del Laboratorio
+## Descripción del Laboratorio
 
 Este laboratorio implementa un **QuadTree desde cero en Python** y lo utiliza para resolver dos problemas clásicos de búsqueda espacial:
 
@@ -41,7 +38,7 @@ Ambos algoritmos son comparados contra sus equivalentes de **fuerza bruta** (ite
 
 ---
 
-## 📁 Estructura del Proyecto
+## Estructura del Proyecto
 
 ```
 Laboratorio_QuadTree/
@@ -72,7 +69,7 @@ Notebook de benchmarking. Implementa los algoritmos de fuerza bruta equivalentes
 
 ---
 
-## 🛠 Tecnologías Utilizadas
+## Tecnologías Utilizadas
 
 | Tecnología | Versión | Rol en el proyecto |
 |---|---|---|
@@ -86,7 +83,7 @@ Notebook de benchmarking. Implementa los algoritmos de fuerza bruta equivalentes
 
 ---
 
-## ⚙️ Instalación y Requisitos
+## Instalación y Requisitos
 
 ### Prerrequisitos
 
@@ -121,7 +118,7 @@ arbol.construir_arbol()
 
 ---
 
-## 🚀 Uso — Ejecución sin escribir código
+## Uso — Ejecución sin escribir código
  
 Los notebooks están diseñados para ejecutarse celda por celda desde Jupyter. No es necesario escribir ninguna línea de código.
  
@@ -146,7 +143,7 @@ Este notebook muestra las búsquedas de forma gráfica sobre 10.000 puntos aleat
 | 3 | Genera la gráfica de **búsqueda por radio** (radio = 200, centro en (400, 400)) — muestra los puntos dentro del radio en rojo y los 20 más cercanos en amarillo |
 | 4 | Genera la gráfica de **vecino más cercano** (desde el punto (500, 500)) — resalta el vecino encontrado con un círculo rojo y la distancia |
  
-> ℹ️ Como los datos se generan aleatoriamente, cada ejecución produce un conjunto diferente de puntos. Los resultados varían entre corridas, pero el comportamiento del árbol es siempre el mismo.
+> Como los datos se generan aleatoriamente, cada ejecución produce un conjunto diferente de puntos. Los resultados varían entre corridas, pero el comportamiento del árbol es siempre el mismo.
  
 ---
  
@@ -163,11 +160,11 @@ Este notebook compara los tiempos del QuadTree contra la fuerza bruta. Ejecutar 
 | 5 | Define la función `medir_rendimiento()` que prueba ambos algoritmos con distintos tamaños de datos |
 | 6 | Ejecuta las pruebas con tamaños desde 100 hasta 500.000 puntos y genera las **gráficas comparativas finales** ⚠️ esta celda puede tardar varios minutos |
  
-> ⚠️ La última celda de `analisis.ipynb` prueba hasta 500.000 puntos y puede tardar entre 3 y 8 minutos dependiendo del equipo. Es normal que parezca que no responde durante ese tiempo — el kernel está trabajando.
+> La última celda de `analisis.ipynb` prueba hasta 500.000 puntos y puede tardar entre 3 y 8 minutos dependiendo del equipo. Es normal que parezca que no responde durante ese tiempo — el kernel está trabajando.
  
 ---
  
-## 📐La Clase QuadTree
+## La Clase QuadTree
  
 ### `QuadTree(datos, dimensiones)`
  
@@ -217,7 +214,7 @@ Método auxiliar público. Calcula la distancia euclidiana entre dos puntos de N
  
 ---
  
-## 📊 Funciones Gráficas
+## Funciones Gráficas
  
 El módulo `funciones_graficas.py` expone cuatro funciones de visualización:
  
@@ -239,7 +236,7 @@ Mide y grafica cómo varía el tiempo de ejecución de `buscar_por_radio()` al a
  
 ---
  
-## 📈 Análisis de Rendimiento
+## Análisis de Rendimiento
  
 ### Vecino más cercano: QuadTree vs. Fuerza Bruta
  
@@ -260,7 +257,7 @@ Las gráficas en `analisis.ipynb` evidencian que esta relación tiene un **compo
  
 ---
  
-## 🧠 Conclusiones
+## Conclusiones
  
 **1. Los QuadTrees son una solución eficiente y elegante para búsquedas espaciales.**  
 La subdivisión recursiva del espacio permite descartar grandes regiones sin examinar cada punto individualmente, logrando una complejidad promedio O(log n) frente al O(n) de la fuerza bruta.
