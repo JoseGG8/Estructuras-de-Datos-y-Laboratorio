@@ -1,5 +1,13 @@
 # Laboratorio: Estructuras de Datos Espaciales - K-D Tree
 
+## 🎯 Objetivos
+
+* **Implementar** una estructura de datos K-D Tree eficiente para la organización de puntos en un espacio bidimensional.
+* **Desarrollar** algoritmos de búsqueda espacial, específicamente Búsqueda por Radio y Vecino más Cercano (KNN).
+* **Comparar** el rendimiento computacional entre la estructura de árbol y el algoritmo de Fuerza Bruta bajo diferentes métricas de volumen de datos.
+* **Visualizar** mediante herramientas gráficas cómo el árbol divide el espacio y optimiza el proceso de filtrado de puntos.
+* **Analizar** el impacto de parámetros como la cardinalidad de los datos y el radio de búsqueda en la eficiencia de la poda (pruning).
+
 Este proyecto implementa y analiza el rendimiento de un **Árbol K-Dimensional (K-D Tree)** en 2 dimensiones, comparando su eficiencia contra algoritmos de **Fuerza Bruta** en tareas de búsqueda espacial.
 
 ## 📂 Estructura del Proyecto
