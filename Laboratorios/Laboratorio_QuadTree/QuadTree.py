@@ -12,21 +12,32 @@ class Nodo_intermedio():
         self.hijos = [None] * num_hijos
 
 class QuadTree():
+    
     def __init__(self, datos, dimensiones):
+        """Constructor de la clase quadTree.
+        Args:
+        datos (list(tuple)): lista de tuplas de datos coordenados,
+        dimensiones (int): dimensiones de los datos"""
         self.datos = datos
         self.dimensiones = dimensiones
         self.root = None
 
     def mitad_datos(self, datos):
+        """Se encarga de calcular cual es el punto medio. Este método se utiliza en el método particionar listas
+        Args:
+            datos (list): Lista de datos coordenados (x,y,z,...)"""
         punto_medio = []
         for i in range(self.dimensiones):
-            min_val = min(datos, key=lambda c: c[i])[i]-10
-            max_val = max(datos, key=lambda c: c[i])[i]+10
+            min_val = min(datos, key=lambda c: c[i])[i]
+            max_val = max(datos, key=lambda c: c[i])[i]
             # Usamos suma para encontrar el centro de la caja
             punto_medio.append((min_val + max_val) / 2)
         return punto_medio
 
     def particionar_listas(self, datos):
+        """Método encargado de dividir los datos que se le pasan como argumento en 2**dimensiones.
+        Utiliza lógica de bits en un numero binario para ubicar cada lista en su cuadrante/octante respectivo, ejemplo:
+        si el punto (x1,y1) es menor que (xmedio, ymedio) en todas sus coordenadas, el numero binario es 00, con 00 se va al cuadrante inferior izquerdo"""
         punto_medio = self.mitad_datos(datos)
         num_hijos = 2**self.dimensiones
         listas_hijos = [[] for _ in range(num_hijos)]
@@ -41,6 +52,7 @@ class QuadTree():
         return listas_hijos
 
     def construir_arbol(self, nodo=None):
+        """Método encargado de construir el arbol recursivamente"""
         num_hijos = 2**self.dimensiones
 
         # 1. Manejo de la Raíz
@@ -56,6 +68,13 @@ class QuadTree():
         # 3. Creamos los nodos hijos
         for i, datos_hijo in enumerate(listas_datos_hijos):
             if len(datos_hijo) > 1:
+                
+                #si todos los puntos son iguales  no podemos seguir dividiendo, recursion infinita#
+                if all(p == datos_hijo[0] for p in datos_hijo):
+                    nuevo_nodo = Nodo_Hoja(datos_hijo[0])
+                    nuevo_nodo.padre = nodo_actual
+                    nodo_actual.hijos[i] = nuevo_nodo
+                    continue
                 # Nodo intermedio: Crear y seguir construyendo
                 nuevo_nodo = Nodo_intermedio(datos_hijo, num_hijos)
                 nuevo_nodo.padre = nodo_actual
@@ -73,6 +92,9 @@ class QuadTree():
                 nodo_actual.hijos[i] = None
 
     def buscar_vecino_cercano(self, punto_Q):
+        """Método principal para la busca de un vecino cercano con un punto de referencia
+        Args: 
+        punto_Q (tuple): coordenada"""
         self.mejor_punto = None
         self.mejor_distancia = float('inf')
         # Iniciamos la recursión pasando la raíz y sus datos para calcular límites
@@ -80,6 +102,8 @@ class QuadTree():
         return self.mejor_punto, self.mejor_distancia
 
     def _nns_recursivo(self, nodo, punto_Q):
+        """Se encarga de bajar hasta un nodo hoja guiandose por el centro del cuadrante actual, cuando encuentra una hoja deja un mejor candidato.
+        Después de bajar se hace un"""
         if nodo is None:
             return
 

@@ -1,11 +1,12 @@
 import matplotlib.pyplot as plt
 import numpy as np
+from QuadTree import *
 
 def graficar_busqueda_radio(arbol, punto_objetivo, radio):
     """
     Visualiza todos los puntos que estan dentro de un radio definido tomado a partir del punto objetivo
     Args:
-        arbol: instancia de KD_Tree ya construida.
+        arbol: instancia de QuadTree ya construida.
         punto_objetivo (tuple): Tupla (x, y).
         radio (float): Valor numérico del radio de búsqueda.
     """
@@ -17,8 +18,11 @@ def graficar_busqueda_radio(arbol, punto_objetivo, radio):
     todos_y = [p[1] for p in arbol.datos]
     
     # 3. Separar los puntos encontrados para resaltarlos
-    dentro_x = [p[0] for p in puntos_dentro]
-    dentro_y = [p[1] for p in puntos_dentro]
+    dentro_x = [p[0] for p in puntos_dentro[0]]
+    dentro_y = [p[1] for p in puntos_dentro[0]]
+
+    cercanos_x = [p[0] for p in puntos_dentro[1]]
+    cercanos_y = [p[1] for p in puntos_dentro[1]]
 
     plt.figure(figsize=(10, 10))
 
@@ -26,10 +30,14 @@ def graficar_busqueda_radio(arbol, punto_objetivo, radio):
     plt.scatter(todos_x, todos_y, s=1, marker=',', color='lightgray', alpha=0.4, label='Puntos fuera')
 
     # Graficar puntos dentro del radio (un poco más grandes y rojos)
-    plt.scatter(dentro_x, dentro_y, s=5, marker='o', color='red', label=f'Dentro del radio ({len(puntos_dentro)} puntos)')
+    plt.scatter(dentro_x, dentro_y, s=5, marker='o', color='red', label=f'Dentro del radio ({len(puntos_dentro[0])} puntos)')
 
     # Graficar el punto objetivo (el centro) con una 'X' azul
     plt.scatter(punto_objetivo[0], punto_objetivo[1], s=50, marker='X', color='blue', label='Objetivo')
+
+    #Graficar 5 puntos más cercanos
+    plt.scatter(cercanos_x, cercanos_y, s=5, marker='o', color='yellow', label=f'5 puntos más cercanos ({len(puntos_dentro[1])} puntos)')
+
 
     # Dibujar el círculo del radio para visualizar el límite
     circulo = plt.Circle(punto_objetivo, radio, color='blue', fill=False, linestyle='--', alpha=0.5)
@@ -48,16 +56,17 @@ def graficar_vecino_cercano(arbol, punto_objetivo):
     """
     Visualiza el vecino más cercano con un zoom inteligente que destaca
     a los protagonistas y mantiene el resto de puntos como contexto Tenue.
-    Args:
-        arbol: instancia de KD_Tree ya construida.
-        punto_objetivo: tupla (x,y) del punto a buscarle un vecino
     """
     # 1. Usar tu método para encontrar el vecino
-    vecino_coordenadas = arbol.buscar_vecino_cercano(punto_objetivo)
+    # IMPORTANTE: Desempaquetamos la tupla (coordenada, distancia)
+    resultado = arbol.buscar_vecino_cercano(punto_objetivo)
     
-    if vecino_coordenadas is None:
+    if resultado[0] is None:
         print("El árbol está vacío o no se encontró vecino.")
         return
+
+    # Separamos la coordenada de la distancia para graficar
+    vecino_coordenadas, dist_encontrada = resultado
 
     # Crear la figura (cuadrada para no deformar distancias)
     fig, ax = plt.subplots(figsize=(9, 9))
@@ -65,7 +74,6 @@ def graficar_vecino_cercano(arbol, punto_objetivo):
     # ==========================================================
     # CAPA 1: Definir el Zoom (Protagonistas)
     # ==========================================================
-    # Graficamos PRIMERO los puntos que queremos que definan el zoom.
     
     # Punto Objetivo (X azul grande)
     ax.scatter(punto_objetivo[0], punto_objetivo[1], s=250, marker='X', 
@@ -74,44 +82,38 @@ def graficar_vecino_cercano(arbol, punto_objetivo):
     # Vecino Encontrado (Círculo rojo grueso y vacío)
     ax.scatter(vecino_coordenadas[0], vecino_coordenadas[1], s=350, 
                facecolors='none', edgecolors='red', linewidths=3.5, 
-               label='Vecino Más Cercano', zorder=11)
+               label=f'Vecino Más Cercano (dist: {dist_encontrada:.2f})', zorder=11)
 
-    # Línea punteada que une los dos puntos (resalta la distancia)
+    # Línea punteada que une los dos puntos
     ax.plot([punto_objetivo[0], vecino_coordenadas[0]], 
             [punto_objetivo[1], vecino_coordenadas[1]], 
             linestyle='--', color='red', alpha=0.6, zorder=5)
 
-    # --- EL TRUCO DEL ZOOM RELATIVO ---
-    # Añadimos un margen del 50% (0.5) alrededor de estos dos puntos.
-    # Esto asegura que se vean cerca pero con aire alrededor.
+    # Margen para que se vea aire alrededor de los dos puntos principales
     ax.margins(0.5) 
 
     # ==========================================================
     # CAPA 2: Contexto (Puntos que NO son el vecino)
     # ==========================================================
-    # CRÍTICO: Desactivamos el autoescalado para que estos puntos
-    # aparezcan pero NO alejen la cámara.
+    # Desactivamos el autoescalado para mantener el zoom en el objetivo y vecino
     ax.set_autoscale_on(False) 
 
-    # Extraemos todos los puntos originales del árbol
     todos_x = [p[0] for p in arbol.datos]
     todos_y = [p[1] for p in arbol.datos]
     
-    # Graficamos el fondo: muy pequeños, grises y con alta transparencia
+    # Graficamos el fondo tenue
     ax.scatter(todos_x, todos_y, s=12, marker=',', color='gray', 
-               alpha=0.5, label='Puntos de Contexto', zorder=1)
+               alpha=0.3, label='Puntos de Contexto', zorder=1)
 
     # Estética final
-    ax.set_title(f"Detalle de Vecindad: Objetivo vs Vecino\nCentrado en {punto_objetivo}", fontsize=14)
+    ax.set_title(f"Búsqueda NNS en QuadTree\nObjetivo: {punto_objetivo}", fontsize=14)
     ax.legend(loc='upper right', fontsize=10)
     ax.grid(True, linestyle=':', alpha=0.4)
     
-    # Asegura que 1 unidad en X sea igual a 1 unidad en Y
     ax.set_aspect('equal', adjustable='datalim')
     
     plt.tight_layout()
     plt.show()
-
 
 def graficar_comparativa(resultados):
     """
@@ -124,7 +126,7 @@ def graficar_comparativa(resultados):
     # Gráfica 1: Vecino Cercano
     plt.subplot(1, 2, 1)
     plt.plot(n, resultados['nn_fb'], 'o--', label='Fuerza Bruta', color='#e74c3c', linewidth=2)
-    plt.plot(n, resultados['nn_kd'], 's-', label='KD-Tree', color='#3498db', linewidth=2)
+    plt.plot(n, resultados['nn_kd'], 's-', label='QuadTree', color='#3498db', linewidth=2)
     plt.title('Rendimiento: Vecino Más Cercano', fontsize=14)
     plt.xlabel('Cantidad de Puntos (N)')
     plt.ylabel('Tiempo (segundos)')
@@ -134,7 +136,7 @@ def graficar_comparativa(resultados):
     # Gráfica 2: Búsqueda por Radio
     plt.subplot(1, 2, 2)
     plt.plot(n, resultados['radio_fb'], 'o--', label='Fuerza Bruta', color='#f39c12', linewidth=2)
-    plt.plot(n, resultados['radio_kd'], 's-', label='KD-Tree', color='#2ecc71', linewidth=2)
+    plt.plot(n, resultados['radio_kd'], 's-', label='QuadTree', color='#2ecc71', linewidth=2)
     plt.title('Rendimiento: Búsqueda por Radio', fontsize=14)
     plt.xlabel('Cantidad de Puntos (N)')
     plt.ylabel('Tiempo (segundos)')
