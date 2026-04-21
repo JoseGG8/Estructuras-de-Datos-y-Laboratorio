@@ -182,9 +182,9 @@ class QuadTree():
         
         # 2. Extraemos solo las coordenadas para las listas finales
         todos_los_puntos = [res[0] for res in self._resultados_temporales]
-        los_5_mas_cercanos = todos_los_puntos[:5]
+        los_20_mas_cercanos = todos_los_puntos[:20]
         
-        return todos_los_puntos, los_5_mas_cercanos
+        return todos_los_puntos, los_20_mas_cercanos
 
     def _radio_recursivo(self, nodo, punto_Q):
         if nodo is None:

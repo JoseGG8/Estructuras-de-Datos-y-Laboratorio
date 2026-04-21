@@ -37,7 +37,7 @@ def graficar_busqueda_radio(arbol, punto_objetivo, radio):
     plt.scatter(punto_objetivo[0], punto_objetivo[1], s=50, marker='X', color='blue', label='Objetivo')
 
     #Graficar 5 puntos más cercanos
-    plt.scatter(cercanos_x, cercanos_y, s=5, marker='o', color='yellow', label=f'5 puntos más cercanos ({len(puntos_dentro[1])} puntos)')
+    plt.scatter(cercanos_x, cercanos_y, s=5, marker='o', color='yellow', label=f'20 puntos más cercanos ({len(puntos_dentro[1])} puntos)')
 
 
     # Dibujar el círculo del radio para visualizar el límite
