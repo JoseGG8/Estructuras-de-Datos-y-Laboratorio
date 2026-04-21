@@ -78,10 +78,10 @@ Notebook de benchmarking. Implementa los algoritmos de fuerza bruta equivalentes
 |---|---|---|
 | **Python** |
 | **Matplotlib** | 
-| **NumPy** | 1.x | Importado como dependencia de Matplotlib |
-| **math** (stdlib) | — | Cálculo de distancias euclidianas |
-| **random** (stdlib) | — | Generación de datos de prueba aleatorios |
-| **time** (stdlib) | — | Medición de tiempos de ejecución con `perf_counter` |
+| **NumPy** | Importado como dependencia de Matplotlib |
+| **math**  | — | Cálculo de distancias euclidianas |
+| **random**  | — | Generación de datos de prueba aleatorios |
+| **time**  | — | Medición de tiempos de ejecución con `perf_counter` |
 | **Jupyter Notebook** | — | Entorno interactivo para pruebas y análisis |
 
 ---
