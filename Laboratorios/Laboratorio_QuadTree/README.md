@@ -1,7 +1,5 @@
-# Laboratorio: QuadTree — Búsqueda Espacial Eficiente
+# Laboratorio: QuadTree 
 
-> **Curso:** Estructuras de Datos y Laboratorio  
-> **Lenguaje:** Python 3.12  
 > **Temas:** QuadTree, Nearest Neighbor Search (NNS), Búsqueda por Radio, Análisis de Complejidad
 
 ---
